@@ -2,71 +2,78 @@
   hosts: catalogue
   become: yes
   tasks:
-    - name: disable old nodejs and enable nodejs
-      ansible.builtin.shell: dnf module disable nodejs -y ; dnf module enable nodejs:18 -y # Imp question ansible.builtin.command vs ansible.builtin.shell 
+  - name: disable old nodejs and enable nodejs
+    ansible.builtin.shell: dnf module disable nodejs -y ; dnf module enable nodejs:18 -y
 
-    - name: Install nodejs
-      ansible.builtin.package:
-        name: nodejs
-        state: present
+  - name: Install nodejs
+    ansible.builtin.dnf:
+      name: nodejs 
+      state: present
 
-    - name: create roboshop user
-      ansible.builtin.user:
-        name : roboshop
+  - name: create roboshop user
+    ansible.builtin.user:
+      name: roboshop
 
-    - name: create app directory
-      ansible.builtin.file:
-        path : /app
-        state: directory
+  - name: Recursively remove app directory
+    ansible.builtin.file:
+      path: /app
+      state: absent
 
-    - name: download catalogue application
-      ansible.builtin.get_url:
-        url : https://roboshop-builds.s3.amazonaws.com/catalogue.zip
-        dest: /tmp
+  - name: create app directory
+    ansible.builtin.file:
+      path: /app
+      state: directory
 
-    - name: extract catalogue application
-      ansible.builtin.unarchive:
-        src : /tmp/catalogue.zip
-        dest: /app
-        remote_src: yes
+  - name: download catalogue application
+    ansible.builtin.get_url:
+      url: https://roboshop-builds.s3.amazonaws.com/catalogue.zip
+      dest: /tmp
 
-    - name: Install dependencies
-      ansible.builtin.command: npm install
-      args:
-        chdir: /app
+  - name: extract catalogue application
+    ansible.builtin.unarchive:
+      src: /tmp/catalogue.zip
+      dest: /app
+      remote_src: yes
 
-    - name: Copy catalogue service
-      ansible.builtin.copy:
-        src: catalogue.service
-        dest: /etc/systemd/system/catalogue.service
+  - name: Install dependencies
+    ansible.builtin.command: npm install
+    args:
+      chdir: /app
 
-    - name: daemon reload and start
-      ansible.builtin.systemd_service:
-        daemon_reload: true
-  
-  # lets start after the data is loaded
+  - name: Copy catalogue service
+    ansible.builtin.copy:
+      src: catalogue.service
+      dest: /etc/systemd/system/catalogue.service
 
-    - name: Copy mongodb repo
-      ansible.builtin.copy:
-        src: mongodb.repo
-        dest: /etc/yum.repos.d/mongodb.repo
+  - name: deamon realod and start
+    ansible.builtin.systemd_service:
+      daemon_reload: true
 
-    - name: Install mongodb
-      ansible.builtin.package:
-        name: mongodb-org
-        state: present
+  # let's start after the data is loaded
+
+  - name: Copy mongodb repo
+    ansible.builtin.copy:
+      src: mongodb.repo
+      dest: /etc/yum.repos.d/mongodb.repo
+
+  - name: Install mongodb client
+    ansible.builtin.package:
+      name: mongodb-org-shell
+      state: present
+
+  - name: get the categories count
+    ansible.builtin.command:  mongo --host mongodb.devopspractice123.online --quiet --eval 'db = db.getSiblingDB("catalogue"); db.products.count()'
+    register: product_count
+
+   - name: print the count
+     ansible.builtin.debug:
+       msg: "product count: {{product_count}}"
   
   # push to server and write below code in catalogue server in super putty to check whether data is present in catalogue server
    # cd app/schema/
    # mongo --host mongodb.devopspractice123.online --quiet --eval 'db = db.getsiblingDB("catalogue"); db.products.count()'
     
-    - name: get the categories count
-      ansible.builtin.command: mongo --host mongodb.devopspractice123.online --quiet --eval 'db = db.getsiblingDB("catalogue"); db.products.count()'
-      register: product count
 
-    - name: print the count
-      ansible.builtin.debug:
-        msg: "product count: {{product_count}}"
 
 
     
