@@ -28,8 +28,8 @@
       url: https://roboshop-builds.s3.amazonaws.com/web.zip
       dest: /tmp
 
-  - name: extract application
-    ansible.builtin.unarchived: # extract application
+  - name: Extract application
+    ansible.builtin.unarchive:
       src: /tmp/web.zip
       dest: /usr/share/nginx/html
       remote_src: yes # file is already available in remote server
