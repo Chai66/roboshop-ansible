@@ -50,11 +50,24 @@
       ansible.builtin.copy:
         src: mongodb.repo
         dest: /etc/yum.repos.d/mongodb.repo
-        
+
     - name: Install mongodb
       ansible.builtin.package:
         name: mongodb-org
         state: present
+  
+  # push to server and write below code in catalogue server in super putty to check whether data is present in catalogue server
+   # cd app/schema/
+   # mongo --host mongodb.devopspractice123.online --quiet --eval 'db = db.getsiblingDB("catalogue"); db.products.count()'
+    
+    - name: get the categories count
+      ansible.builtin.command: mongo --host mongodb.devopspractice123.online --quiet --eval 'db = db.getsiblingDB("catalogue"); db.products.count()'
+      register: product count
+
+    - name: print the count
+      ansible.builtin.debug:
+        msg: "product count: {{product_count}}"
+
 
     
 
