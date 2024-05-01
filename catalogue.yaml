@@ -72,6 +72,9 @@
   # push to server and write below code in catalogue server in super putty to check whether data is present in catalogue server
    # cd app/schema/
    # mongo --host mongodb.devopspractice123.online --quiet --eval 'db = db.getsiblingDB("catalogue"); db.products.count()'
+
+  - name: load catalogue data
+    ansible.builtin.command: mongo --host mongodb.devopspractice123.online <aap/schema/catalogue.js
     
 
 
