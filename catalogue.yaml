@@ -65,9 +65,9 @@
     ansible.builtin.command:  mongo --host mongodb.devopspractice123.online --quiet --eval 'db = db.getSiblingDB("catalogue"); db.products.count()'
     register: product_count
 
-  - name: print the count
-    ansible.builtin.debug:
-      msg: "product count: {{product_count}}"
+  # - name: print the count
+  #   ansible.builtin.debug:
+  #     msg: "product count: {{product_count}}"
   
   # push to server and write below code in catalogue server in super putty to check whether data is present in catalogue server
    # cd app/schema/
@@ -75,6 +75,13 @@
 
   - name: load catalogue data
     ansible.builtin.command: mongo --host mongodb.devopspractice123.online < /app/schema/catalogue.js
+    when: product_count.stdout == 0
+
+  - name: start and enable catalogue
+      ansible.builtin.service:
+        name: catalogue
+        state: started
+        enabled: yes
     
 
 
