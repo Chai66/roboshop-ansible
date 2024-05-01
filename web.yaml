@@ -5,7 +5,7 @@
   - name: Install nginx
     ansible.builtin.dnf:
       name: nginx
-      sate: present
+      state: present
 
   # - name: start and enable catalogue
   #   ansible.builtin.service:
