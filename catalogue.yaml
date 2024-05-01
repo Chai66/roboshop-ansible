@@ -14,7 +14,7 @@
     ansible.builtin.user:
       name: roboshop
 
-  - name: Recursively remove app directory
+  - name: Recursively remove app directory # delete app dir an create dir in next module
     ansible.builtin.file:
       path: /app
       state: absent
@@ -82,6 +82,7 @@
       name: catalogue
       state: started
       enabled: yes
+  
     
 
 
