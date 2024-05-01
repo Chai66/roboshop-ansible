@@ -74,7 +74,7 @@
    # mongo --host mongodb.devopspractice123.online --quiet --eval 'db = db.getsiblingDB("catalogue"); db.products.count()'
 
   - name: load catalogue data
-    ansible.builtin.command: mongo --host mongodb.devopspractice123.online <aap/schema/catalogue.js
+    ansible.builtin.command: mongo --host mongodb.devopspractice123.online < app/schema/catalogue.js
     
 
 
