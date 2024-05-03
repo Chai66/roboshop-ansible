@@ -55,5 +55,5 @@
         msg: "schema output: {{schema}}"
 
     - name: load citites data
-      ansible.builtin.command: mysql -h mysql.devopspractice123.online -uroot -pRoboShop@1 < /app/schema/shipping.sql 
+      ansible.builtin.command: "mysql -h mysql.devopspractice123.online -uroot -p{{mysql_password}} < /app/schema/shipping.sql" 
       when: schema.stdout !== "1"
