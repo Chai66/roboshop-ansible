@@ -1,8 +1,8 @@
----
 - name: install shipping component
   hosts: shipping
   become: yes
-  mysql_password: RoboShop@1
+  vars:
+    mysql_password: RoboShop@1
   tasks:
     - name: install maven
       ansible.builtin.dnf:
@@ -49,7 +49,7 @@
         -p{{mysql_password}} -sN -e "SELECT COUNT(*) FROM
         INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'cities'"
       register: schema
-      
+
     - name: print output
       ansible.builtin.debug:
         msg: "schema output: {{schema}}"
