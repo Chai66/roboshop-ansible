@@ -54,6 +54,12 @@
       ansible.builtin.debug:
         msg: "schema output: {{schema}}"
 
-    - name: load citites data
-      ansible.builtin.command: "mysql -h mysql.devopspractice123.online -uroot -p{{mysql_password}} < /app/schema/shipping.sql" 
-      when: schema.stdout !== "1"
+    - name: load cities data
+      ansible.builtin.shell: "mysql -h mysql.daws76s.online -uroot -p{{mysql_password}}  < /app/schema/shipping.sql"
+      when: schema.stdout != "1"
+
+    - name: start and enable shiping
+    ansible.builtin.service:
+      name: shipping
+      state: started
+      enabled: yes
