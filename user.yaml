@@ -62,7 +62,7 @@
       state: present
 
   - name: get the users count
-    ansible.builtin.command:  mongo --host mongodb.devopspractice123.online --quiet --eval 'db = db.getSiblingDB("users"); db.users.count()'
+    ansible.builtin.command:  mongo --host mongodb.devopspilot.online --quiet --eval 'db = db.getSiblingDB("users"); db.users.count()'
     register: user_count
 
   # - name: print the count
@@ -71,10 +71,10 @@
   
   # push to server and write below code in user server in super putty to check whether data is present in user server
    # cd app/schema/
-   # mongo --host mongodb.devopspractice123.online --quiet --eval 'db = db.getsiblingDB("user"); db.products.count()'
+   # mongo --host mongodb.devopspilot.online --quiet --eval 'db = db.getsiblingDB("user"); db.products.count()'
 
   - name: load user data
-    ansible.builtin.command: mongo --host mongodb.devopspractice123.online < /app/schema/user.js
+    ansible.builtin.command: mongo --host mongodb.devopspilot.online < /app/schema/user.js
     when: user_count.stdout == "0"  # keep double quotes
 
   - name: start and enable user
